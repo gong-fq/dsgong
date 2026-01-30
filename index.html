@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepSeek AI Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* CSS样式保持不变... */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0f172a;
+      --secondary: #1e293b;
+      --accent: #3b82f6;
+      --accent-light: #60a5fa;
+      --accent-dark: #2563eb;
+      --highlight: #8b5cf6;
+      --light: #f8fafc;
+      --text: #e2e8f0;
+      --text-light: #94a3b8;
+      --code-bg: #0d1117;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 头部样式 */
+    header {
+      text-align: center;
+      padding: 40px 20px 30px;
+      animation: fadeInDown 0.6s ease-out;
+    }
+
+    .logo {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(45deg, var(--accent-light), var(--highlight));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      font-weight: 400;
+      margin-bottom: 15px;
+    }
+
+    .tagline {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      color: var(--accent-light);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    /* 语言切换器 */
+    .language-switcher {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+    }
+
+    .lang-btn {
+      padding: 6px 14px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 6px;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .lang-btn:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* 课程导航 */
+    .course-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px 0;
+      animation: fadeIn 0.8s ease-out 0.2s backwards;
+    }
+
+    .lesson-btn {
+      padding: 10px 20px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(8px);
+    }
+
+    .lesson-btn:hover {
+      background: rgba(30, 41, 59, 0.8);
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .lesson-btn.active {
+      background: var(--accent);
+      border-color: var(--accent-light);
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* 课程内容 */
+    .lesson {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 16px;
+      padding: 35px;
+      margin: 20px 0;
+      display: none;
+      animation: slideIn 0.4s ease-out;
+      box-shadow: 0 8px 32px var(--shadow);
+    }
+
+    .lesson.active {
+      display: block;
+    }
+
+    .lesson h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--light);
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .lesson h3 {
+      font-size: 1.5rem;
+      margin: 25px 0 15px;
+      color: var(--accent-light);
+    }
+
+    .lesson p {
+      margin: 15px 0;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .lesson ul, .lesson ol {
+      margin: 15px 0 15px 25px;
+      font-size: 1.05rem;
+    }
+
+    .lesson li {
+      margin: 10px 0;
+      padding-left: 5px;
+    }
+
+    /* 代码样式 */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--accent-light);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 18px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 18px 0;
+      border-left: 4px solid var(--accent);
+      box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      border: none;
+      display: block;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* 知识点卡片 */
+    .knowledge-card {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid var(--highlight);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--light);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 练习区域 */
+    .practice-section {
+      background: rgba(59, 130, 246, 0.08);
+      padding: 25px;
+      border-radius: 12px;
+      margin: 25px 0;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .practice-title {
+      font-size: 1.3rem;
+      color: var(--accent-light);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .question {
+      background: rgba(30, 41, 59, 0.9);
+      padding: 18px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .option:hover {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: var(--accent);
+    }
+
+    .submit-btn {
+      padding: 10px 24px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      margin-top: 10px;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .result {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 500;
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .result.correct {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: var(--success);
+      display: block;
+    }
+
+    .result.incorrect {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--error);
+      color: var(--error);
+      display: block;
+    }
+
+    /* 快速回复按钮 */
+    .quick-questions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .quick-btn {
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 20px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .quick-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* AI助手样式 */
+    .ai-assistant {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 1000;
+    }
+
+    .ai-toggle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--highlight));
+      border: 2px solid var(--light);
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-toggle:hover {
+      transform: scale(1.08) rotate(5deg);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.6);
+    }
+
+    .ai-panel {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 420px;
+      max-width: calc(100vw - 60px);
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 16px;
+      padding: 22px;
+      display: none;
+      box-shadow: 0 20px 60px var(--shadow);
+      animation: slideUp 0.25s ease-out;
+      border-top: 3px solid var(--accent);
+    }
+
+    .ai-panel.active {
+      display: block;
+    }
+
+    .ai-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .ai-header h3 {
+      color: var(--light);
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .ai-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ai-control-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .ai-control-btn:hover {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: var(--accent);
+    }
+
+    .ai-control-btn.recording {
+      background: var(--error);
+      animation: pulse 1s infinite;
+    }
+
+    .ai-control-btn.speaking {
+      background: var(--success);
+    }
+
+    .ai-control-btn.active {
+      background: var(--accent);
+    }
+
+    .input-area {
+      display: flex;
+      gap: 8px;
+      margin: 15px 0;
+    }
+
+    #aiInput {
+      flex: 1;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      resize: none;
+      min-height: 44px;
+      max-height: 120px;
+      transition: border-color 0.2s;
+    }
+
+    #aiInput:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    }
+
+    .send-btn {
+      padding: 0 18px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .send-btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .send-btn.loading {
+      background: var(--accent-dark);
+      opacity: 0.8;
+    }
+
+    .ai-response {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .ai-response.loading {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .ai-response.error {
+      color: var(--error);
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .ai-response.success {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .ai-typing {
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: var(--accent);
+      margin-left: 4px;
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+
+    /* TTS状态指示器 */
+    .tts-status {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      display: none;
+    }
+
+    .tts-status.active {
+      display: block;
+      color: var(--accent);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .logo { font-size: 2.2rem; }
+      .subtitle { font-size: 1.1rem; }
+      .lesson { padding: 25px; }
+      .lesson h2 { font-size: 1.8rem; }
+      .lesson-btn { padding: 8px 16px; font-size: 0.85rem; }
+      .ai-panel { 
+        width: calc(100vw - 40px); 
+        right: 20px;
+        bottom: 80px;
+      }
+      .ai-toggle { width: 56px; height: 56px; font-size: 1.6rem; }
+      .language-switcher { 
+        position: static; 
+        margin-bottom: 20px; 
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 15px; }
+      header { padding: 30px 15px 20px; }
+      .lesson { padding: 20px; }
+      .course-nav { gap: 6px; }
+      .lesson-btn { padding: 7px 14px; font-size: 0.8rem; }
+    }
+
+    /* 动画 */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 语言切换器 -->
+    <div class="language-switcher">
+      <button class="lang-btn active" data-lang="zh" onclick="setLanguage('zh')">🇨🇳 中文</button>
+      <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇺🇸 English</button>
+    </div>
+
+    <!-- 头部 -->
+    <header>
+      <h1 class="logo" data-zh="DeepSeek AI Academy" data-en="DeepSeek AI Academy">DeepSeek AI Academy</h1>
+      <p class="subtitle" data-zh="Master Large Language Models · 精通大语言模型" data-en="Master Large Language Models · Learn LLM Technology">Master Large Language Models · 精通大语言模型</p>
+      <p>天津财经大学统计学院教授   龚凤乾</p>
+      <span class="tagline" data-zh="从理论到实践的系统化学习" data-en="Systematic Learning from Theory to Practice">从理论到实践的系统化学习</span>
+    </header>
+
+    <!-- 课程导航 -->
+    <nav class="course-nav">
+      <button class="lesson-btn active" data-lesson="1" data-zh="第1讲：基础概念" data-en="Lesson 1: Basic Concepts">第1讲：基础概念</button>
+      <button class="lesson-btn" data-lesson="2" data-zh="第2讲：模型架构" data-en="Lesson 2: Model Architecture">第2讲：模型架构</button>
+      <button class="lesson-btn" data-lesson="3" data-zh="第3讲：Transformer原理" data-en="Lesson 3: Transformer Principles">第3讲：Transformer原理</button>
+      <button class="lesson-btn" data-lesson="4" data-zh="第4讲：训练方法" data-en="Lesson 4: Training Methods">第4讲：训练方法</button>
+      <button class="lesson-btn" data-lesson="5" data-zh="第5讲：微调技巧" data-en="Lesson 5: Fine-tuning Techniques">第5讲：微调技巧</button>
+      <button class="lesson-btn" data-lesson="6" data-zh="第6讲：提示工程" data-en="Lesson 6: Prompt Engineering">第6讲：提示工程</button>
+      <button class="lesson-btn" data-lesson="7" data-zh="第7讲：应用开发" data-en="Lesson 7: Application Development">第7讲：应用开发</button>
+      <button class="lesson-btn" data-lesson="8" data-zh="第8讲：未来展望" data-en="Lesson 8: Future Perspectives">第8讲：未来展望</button>
+    </nav>
+
+    <!-- 课程内容 -->
+    <main>
+      <!-- 第1讲 - 中英文内容 -->
+      <section class="lesson active" id="lesson1">
+        <h2 data-zh="第1讲：大语言模型基础概念" data-en="Lesson 1: Basic Concepts of Large Language Models">第1讲：大语言模型基础概念</h2>
+        
+        <div class="knowledge-card">
+          <div class="card-title">
+            <span data-zh="📚 核心知识点" data-en="📚 Core Knowledge Points">📚 核心知识点</span>
+          </div>
+          <p data-zh="大语言模型（LLM）是基于深度学习的人工智能系统，通过大量文本数据训练，能够理解、生成和推理自然语言。" 
+             data-en="Large Language Models (LLMs) are AI systems based on deep learning, trained on massive text data to understand, generate, and reason with natural language.">
+            大语言模型（LLM）是基于深度学习的人工智能系统，通过大量文本数据训练，能够理解、生成和推理自然语言。
+          </p>
+        </div>
+
+        <h3 data-zh="什么是大语言模型？" data-en="What are Large Language Models?">什么是大语言模型？</h3>
+        <p data-zh="大语言模型是自然语言处理领域的重大突破。它们通过在超大规模文本数据上进行无监督学习，掌握了语言的统计规律和语义理解能力。"
+           data-en="Large Language Models represent a major breakthrough in natural language processing. Through unsupervised learning on massive text data, they master statistical patterns and semantic understanding of language.">
+          大语言模型是自然语言处理领域的重大突破。它们通过在超大规模文本数据上进行无监督学习，掌握了语言的统计规律和语义理解能力。
+        </p>
+
+        <h3 data-zh="DeepSeek模型特点" data-en="DeepSeek Model Features">DeepSeek模型特点</h3>
+        <ul>
+          <li data-zh="大规模参数：从数十亿到万亿级参数" data-en="Large-scale parameters: From billions to trillions of parameters">
+            <strong data-zh="大规模参数" data-en="Large-scale parameters">大规模参数</strong>：<span data-zh="从数十亿到万亿级参数" data-en="From billions to trillions of parameters">从数十亿到万亿级参数</span>
+          </li>
+          <li data-zh="强大理解能力：深度理解上下文和语义" data-en="Strong comprehension: Deep understanding of context and semantics">
+            <strong data-zh="强大理解能力" data-en="Strong comprehension">强大理解能力</strong>：<span data-zh="深度理解上下文和语义" data-en="Deep understanding of context and semantics">深度理解上下文和语义</span>
+          </li>
+          <li data-zh="多语言支持：支持中英文等多种语言" data-en="Multilingual support: Supports Chinese, English, and other languages">
+            <strong data-zh="多语言支持" data-en="Multilingual support">多语言支持</strong>：<span data-zh="支持中英文等多种语言" data-en="Supports Chinese, English, and other languages">支持中英文等多种语言</span>
+          </li>
+          <li data-zh="推理能力：能够进行逻辑推理和问题解决" data-en="Reasoning ability: Capable of logical reasoning and problem-solving">
+            <strong data-zh="推理能力" data-en="Reasoning ability">推理能力</strong>：<span data-zh="能够进行逻辑推理和问题解决" data-en="Capable of logical reasoning and problem-solving">能够进行逻辑推理和问题解决</span>
+          </li>
+          <li data-zh="代码生成：强大的编程辅助能力" data-en="Code generation: Powerful programming assistance">
+            <strong data-zh="代码生成" data-en="Code generation">代码生成</strong>：<span data-zh="强大的编程辅助能力" data-en="Powerful programming assistance">强大的编程辅助能力</span>
+          </li>
+        </ul>
+
+        <h3 data-zh="基础术语" data-en="Basic Terminology">基础术语</h3>
+        <pre><code data-zh="Token（令牌）：文本的最小处理单元，可以是字符、子词或单词
+Embedding（嵌入）：将文本转换为数学向量的表示
+Attention（注意力机制）：模型关注输入中重要部分的能力
+Prompt（提示）：给模型的输入指令或问题
+Inference（推理）：模型基于输入生成输出的过程"
+     data-en="Token: The smallest processing unit of text, can be character, subword, or word
+Embedding: Converting text into mathematical vector representations
+Attention: The model's ability to focus on important parts of input
+Prompt: Input instructions or questions given to the model
+Inference: The process of generating outputs based on inputs">Token（令牌）：文本的最小处理单元，可以是字符、子词或单词
+Embedding（嵌入）：将文本转换为数学向量的表示
+Attention（注意力机制）：模型关注输入中重要部分的能力
+Prompt（提示）：给模型的输入指令或问题
+Inference（推理）：模型基于输入生成输出的过程</code></pre>
+
+        <div class="practice-section">
+          <div class="practice-title">
+            <span data-zh="💡 快速测试" data-en="💡 Quick Quiz">💡 快速测试</span>
+          </div>
+          <div class="question">
+            <p data-zh="<strong>问题：</strong>大语言模型训练的核心目标是什么？" 
+               data-en="<strong>Question:</strong> What is the core objective of Large Language Model training?">
+              <strong data-zh="问题：" data-en="Question:">问题：</strong><span data-zh="大语言模型训练的核心目标是什么？" data-en="What is the core objective of Large Language Model training?">大语言模型训练的核心目标是什么？</span>
+            </p>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q1" value="A">
+                <span data-zh="A. 记住所有的训练数据" data-en="A. Memorize all training data">A. 记住所有的训练数据</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="B">
+                <span data-zh="B. 学习语言的统计规律和语义理解" data-en="B. Learn statistical patterns and semantic understanding of language">B. 学习语言的统计规律和语义理解</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="q1" value="C">
+                <span data-zh="C. 精确复制人类的写作风格" data-en="C. Precisely replicate human writing styles">C. 精确复制人类的写作风格</span>
+              </label>
+            </div>
+            <button class="submit-btn" onclick="checkAnswer('q1', 'B')" 
+                    data-zh="检查答案" 
+                    data-en="Check Answer">检查答案</button>
+            <div class="result" id="result1"></div>
+          </div>
+        </div>
+
+        <div class="quick-questions">
+          <button class="quick-btn" onclick="askQuestion('什么是大语言模型？')" 
+                  data-zh="什么是大语言模型？" 
+                  data-en="What are Large Language Models?">什么是大语言模型？</button>
+          <button class="quick-btn" onclick="askQuestion('DeepSeek有什么特点？')" 
+                  data-zh="DeepSeek特点" 
+                  data-en="DeepSeek Features">DeepSeek特点</button>
+          <button class="quick-btn" onclick="askQuestion('解释一下Token是什么')" 
+                  data-zh="Token是什么？" 
+                  data-en="What is a Token?">Token是什么？</button>
+        </div>
+      </section>
+
+      <!-- 第2讲 - 简化版，实际应用中需要完整内容 -->
+      <section class="lesson" id="lesson2">
+        <h2 data-zh="第2讲：DeepSeek模型架构解析" data-en="Lesson 2: DeepSeek Model Architecture Analysis">第2讲：DeepSeek模型架构解析</h2>
+        
+        <div class="knowledge-card">
+          <div class="card-title">
+            <span data-zh="🏗️ 架构特点" data-en="🏗️ Architecture Features">🏗️ 架构特点</span>
+          </div>
+          <p data-zh="DeepSeek采用先进的Transformer架构，通过优化注意力机制和训练策略，在保持高性能的同时实现了高效率。"
+             data-en="DeepSeek employs advanced Transformer architecture, optimizing attention mechanisms and training strategies for high performance and efficiency.">
+            DeepSeek采用先进的Transformer架构，通过优化注意力机制和训练策略，在保持高性能的同时实现了高效率。
+          </p>
+        </div>
+
+        <h3 data-zh="模型架构组成" data-en="Model Architecture Components">模型架构组成</h3>
+        <ul>
+          <li data-zh="Encoder-Decoder结构：部分版本采用，部分为纯Decoder" data-en="Encoder-Decoder structure: Some versions use this, some are pure Decoder">
+            <strong data-zh="Encoder-Decoder结构" data-en="Encoder-Decoder structure">Encoder-Decoder结构</strong>：<span data-zh="部分版本采用，部分为纯Decoder" data-en="Some versions use this, some are pure Decoder">部分版本采用，部分为纯Decoder</span>
+          </li>
+          <li data-zh="多头注意力机制：并行处理不同角度的语义信息" data-en="Multi-head attention: Processes semantic information from different perspectives in parallel">
+            <strong data-zh="多头注意力机制" data-en="Multi-head attention">多头注意力机制</strong>：<span data-zh="并行处理不同角度的语义信息" data-en="Processes semantic information from different perspectives in parallel">并行处理不同角度的语义信息</span>
+          </li>
+          <li data-zh="前馈神经网络：每层的非线性变换" data-en="Feed-forward neural network: Non-linear transformations in each layer">
+            <strong data-zh="前馈神经网络" data-en="Feed-forward neural network">前馈神经网络</strong>：<span data-zh="每层的非线性变换" data-en="Non-linear transformations in each layer">每层的非线性变换</span>
+          </li>
+        </ul>
+
+        <div class="practice-section">
+          <div class="practice-title">
+            <span data-zh="💡 快速测试" data-en="💡 Quick Quiz">💡 快速测试</span>
+          </div>
+          <div class="question">
+            <p data-zh="<strong>问题：</strong>DeepSeek模型主要基于哪种架构？" 
+               data-en="<strong>Question:</strong> What architecture is DeepSeek primarily based on?">
+              <strong data-zh="问题：" data-en="Question:">问题：</strong><span data-zh="DeepSeek模型主要基于哪种架构？" data-en="What architecture is DeepSeek primarily based on?">DeepSeek模型主要基于哪种架构？</span>
+            </p>
+            <div class="options">
+              <label class="option">
+                <input type="radio" name="q2" value="A">
+                <span data-zh="A. CNN（卷积神经网络）" data-en="A. CNN (Convolutional Neural Network)">A. CNN（卷积神经网络）</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="B">
+                <span data-zh="B. Transformer" data-en="B. Transformer">B. Transformer</span>
+              </label>
+              <label class="option">
+                <input type="radio" name="q2" value="C">
+                <span data-zh="C. RNN（循环神经网络）" data-en="C. RNN (Recurrent Neural Network)">C. RNN（循环神经网络）</span>
+              </label>
+            </div>
+            <button class="submit-btn" onclick="checkAnswer('q2', 'B')" 
+                    data-zh="检查答案" 
+                    data-en="Check Answer">检查答案</button>
+            <div class="result" id="result2"></div>
+          </div>
+        </div>
+
+        <div class="quick-questions">
+          <button class="quick-btn" onclick="askQuestion('解释Transformer架构')" 
+                  data-zh="Transformer架构" 
+                  data-en="Transformer Architecture">Transformer架构</button>
+          <button class="quick-btn" onclick="askQuestion('什么是注意力机制？')" 
+                  data-zh="注意力机制" 
+                  data-en="Attention Mechanism">注意力机制</button>
+        </div>
+      </section>
+
+      <!-- 第3-8讲 - 简化内容 -->
+      <section class="lesson" id="lesson3">
+        <h2 data-zh="第3讲：Transformer原理深入" data-en="Lesson 3: In-depth Transformer Principles">第3讲：Transformer原理深入</h2>
+        <p data-zh="Transformer架构是当今大语言模型的基础..." data-en="Transformer architecture is the foundation of modern large language models...">内容待补充...</p>
+        <div class="quick-questions">
+          <button class="quick-btn" onclick="askQuestion('Transformer工作原理')" 
+                  data-zh="Transformer原理" 
+                  data-en="Transformer Principles">Transformer原理</button>
+        </div>
+      </section>
+
+      <!-- 其他课程章节类似... -->
+
+    </main>
+  </div>
+
+  <!-- AI助手 -->
+  <div class="ai-assistant">
+    <button class="ai-toggle" onclick="toggleAI()">🤖</button>
+    <div class="ai-panel" id="aiPanel">
+      <div class="ai-header">
+        <h3 data-zh="DeepSeek学习助手" data-en="DeepSeek Learning Assistant">DeepSeek学习助手</h3>
+        <div class="ai-controls">
+          <button class="ai-control-btn" onclick="toggleVoice()" id="voiceBtn" 
+                  title-zh="语音输入" 
+                  title-en="Voice Input">🎤</button>
+          <button class="ai-control-btn" onclick="clearChat()" 
+                  title-zh="清空对话" 
+                  title-en="Clear Chat">🗑️</button>
+          <button class="ai-control-btn" onclick="speakResponse()" id="ttsBtn" 
+                  title-zh="语音朗读" 
+                  title-en="Read Aloud">🔊</button>
+          <button class="ai-control-btn" onclick="testFunctionConnection()" 
+                  title-zh="测试连接" 
+                  title-en="Test Connection">🔧</button>
+        </div>
+      </div>
+      
+      <div class="input-area">
+        <textarea 
+          id="aiInput" 
+          placeholder="输入关于DeepSeek的问题... / Ask about DeepSeek..."
+          rows="2"
+          onkeydown="handleInputKeydown(event)"
+        ></textarea>
+        <button class="send-btn" onclick="sendToAI()" id="sendBtn" 
+                data-zh="发送" 
+                data-en="Send">发送</button>
+      </div>
+      
+      <div class="ai-response" id="aiResponse">
+        <!-- AI响应内容，通过JavaScript更新 -->
+      </div>
+      
+      <div class="tts-status" id="ttsStatus">
+        <!-- TTS状态将在这里显示 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ================ 全局状态 ================
+    let currentLanguage = 'zh'; // 'zh' 或 'en'
+    let isAIOpen = false;
+    let isRecording = false;
+    let isSpeaking = false;
+    let speechRecognition = null;
+    let currentResponse = '';
+    let isAILoading = false;
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+
+    // ================ 完整的语言切换系统 ================
+    function setLanguage(lang) {
+      console.log('切换语言到:', lang);
+      
+      // 更新当前语言
+      currentLanguage = lang;
+      
+      // 更新按钮状态
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      
+      // 更新所有带有data-zh和data-en属性的元素
+      updateAllTextElements(lang);
+      
+      // 更新AI助手界面
+      updateAIPanelText(lang);
+      
+      // 更新语音识别语言
+      if (speechRecognition) {
+        speechRecognition.lang = lang === 'zh' ? 'zh-CN' : 'en-US';
+      }
+      
+      // 更新输入框提示
+      const input = document.getElementById('aiInput');
+      input.placeholder = lang === 'zh' 
+        ? '输入关于DeepSeek的问题...' 
+        : 'Ask about DeepSeek...';
+      
+      // 更新AI响应区域的初始消息
+      updateInitialAIResponse(lang);
+      
+      // 保存语言偏好到本地存储
+      localStorage.setItem('preferredLanguage', lang);
+      
+      console.log('语言切换完成');
+    }
+
+    function updateAllTextElements(lang) {
+      // 更新所有带有data-zh和data-en属性的元素
+      document.querySelectorAll('[data-zh], [data-en]').forEach(element => {
+        const zhText = element.getAttribute('data-zh');
+        const enText = element.getAttribute('data-en');
+        
+        if (zhText && enText) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            // 对于输入元素，更新placeholder
+            element.placeholder = lang === 'zh' ? zhText : enText;
+          } else if (element.hasAttribute('title-zh')) {
+            // 对于有title属性的元素
+            const titleZh = element.getAttribute('title-zh');
+            const titleEn = element.getAttribute('title-en');
+            if (titleZh && titleEn) {
+              element.title = lang === 'zh' ? titleZh : titleEn;
+            }
+          } else {
+            // 对于普通文本元素
+            const newText = lang === 'zh' ? zhText : enText;
+            
+            // 检查是否是HTML内容
+            if (newText.includes('<')) {
+              element.innerHTML = newText;
+            } else {
+              element.textContent = newText;
+            }
+          }
+        }
+      });
+      
+      // 特殊处理按钮文本
+      document.querySelectorAll('.submit-btn, .send-btn').forEach(btn => {
+        if (btn.hasAttribute('data-zh') && btn.hasAttribute('data-en')) {
+          btn.textContent = lang === 'zh' ? btn.getAttribute('data-zh') : btn.getAttribute('data-en');
+        }
+      });
+      
+      // 特殊处理快速问题按钮
+      document.querySelectorAll('.quick-btn').forEach(btn => {
+        if (btn.hasAttribute('data-zh') && btn.hasAttribute('data-en')) {
+          btn.textContent = lang === 'zh' ? btn.getAttribute('data-zh') : btn.getAttribute('data-en');
+        }
+      });
+      
+      // 更新练习结果文本
+      updateQuizResultsText(lang);
+    }
+
+    function updateQuizResultsText(lang) {
+      // 更新已有的练习结果
+      document.querySelectorAll('.result').forEach(result => {
+        if (result.classList.contains('correct')) {
+          result.textContent = lang === 'zh' ? '✅ 回答正确！很好！' : '✅ Correct! Well done!';
+        } else if (result.classList.contains('incorrect')) {
+          result.textContent = lang === 'zh' ? '❌ 答案不正确，请再思考一下。' : '❌ Incorrect. Please try again.';
+        }
+      });
+    }
+
+    function updateAIPanelText(lang) {
+      // 更新AI面板中的文本
+      const aiPanel = document.getElementById('aiPanel');
+      if (!aiPanel) return;
+      
+      // 更新AI助手标题
+      const aiTitle = aiPanel.querySelector('h3');
+      if (aiTitle && aiTitle.hasAttribute('data-zh') && aiTitle.hasAttribute('data-en')) {
+        aiTitle.textContent = lang === 'zh' ? aiTitle.getAttribute('data-zh') : aiTitle.getAttribute('data-en');
+      }
+      
+      // 更新按钮标题
+      aiPanel.querySelectorAll('[title-zh], [title-en]').forEach(btn => {
+        const titleZh = btn.getAttribute('title-zh');
+        const titleEn = btn.getAttribute('title-en');
+        if (titleZh && titleEn) {
+          btn.title = lang === 'zh' ? titleZh : titleEn;
+        }
+      });
+    }
+
+    function updateInitialAIResponse(lang) {
+      const aiResponse = document.getElementById('aiResponse');
+      if (aiResponse && !aiResponse.classList.contains('loading') && 
+          !aiResponse.classList.contains('error') && 
+          !aiResponse.classList.contains('success')) {
+        aiResponse.textContent = lang === 'zh'
+          ? '你好！我是DeepSeek学习助手，可以解答关于大语言模型的各种问题。有什么可以帮助你的吗？'
+          : 'Hello! I am the DeepSeek learning assistant. I can answer various questions about large language models. How can I help you?';
+      }
+    }
+
+    // ================ 课程导航 ================
+    document.querySelectorAll('.lesson-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.lesson').forEach(l => l.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('lesson' + btn.dataset.lesson).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // ================ 练习答案检查 ================
+    function checkAnswer(questionId, correctAnswer) {
+      const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+      const resultDiv = document.getElementById(`result${questionId.charAt(1)}`);
+      
+      if (!selected) {
+        alert(currentLanguage === 'zh' ? '请先选择一个答案！' : 'Please select an answer first!');
+        return;
+      }
+
+      if (selected.value === correctAnswer) {
+        resultDiv.textContent = currentLanguage === 'zh' 
+          ? '✅ 回答正确！很好！' 
+          : '✅ Correct! Well done!';
+        resultDiv.className = 'result correct';
+      } else {
+        resultDiv.textContent = currentLanguage === 'zh'
+          ? '❌ 答案不正确，请再思考一下。'
+          : '❌ Incorrect. Please try again.';
+        resultDiv.className = 'result incorrect';
+      }
+    }
+
+    // ================ AI助手功能 ================
+    function toggleAI() {
+      isAIOpen = !isAIOpen;
+      document.getElementById('aiPanel').classList.toggle('active', isAIOpen);
+      if (isAIOpen) {
+        document.getElementById('aiInput').focus();
+      }
+    }
+
+    function askQuestion(question) {
+      const input = document.getElementById('aiInput');
+      input.value = question;
+      sendToAI();
+    }
+
+    function handleInputKeydown(event) {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendToAI();
+      }
+    }
+
+    // 发送消息到AI
+    async function sendToAI() {
+      if (isAILoading) return;
+      
+      const input = document.getElementById('aiInput');
+      const message = input.value.trim();
+      
+      if (!message) {
+        alert(currentLanguage === 'zh' ? '请输入问题' : 'Please enter a question');
+        return;
+      }
+
+      const responseDiv = document.getElementById('aiResponse');
+      const sendBtn = document.getElementById('sendBtn');
+      
+      // 停止正在进行的朗读
+      stopSpeaking();
+      
+      // 设置加载状态
+      isAILoading = true;
+      sendBtn.textContent = currentLanguage === 'zh' ? '发送中...' : 'Sending...';
+      sendBtn.classList.add('loading');
+      input.disabled = true;
+      
+      // 显示加载状态
+      const loadingText = currentLanguage === 'zh' 
+        ? '正在思考... <span class="ai-typing"></span>'
+        : 'Thinking... <span class="ai-typing"></span>';
+      responseDiv.innerHTML = loadingText;
+      responseDiv.className = 'ai-response loading';
+      
+      try {
+        // 检测语言
+        const hasChinese = /[\u4e00-\u9fa5]/.test(message);
+        const messageLanguage = hasChinese ? 'zh' : 'en';
+        
+        // 实际API调用
+        const response = await fetch('/.netlify/functions/deepseek-assistant', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            message: message,
+            language: messageLanguage,
+            timestamp: new Date().toISOString()
+          })
+        });
+        
+        console.log('API响应状态:', response.status);
+        
+        // 检查响应类型
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await response.text();
+          console.error('非JSON响应:', text.substring(0, 200));
+          throw new Error('服务器返回了非JSON响应');
+        }
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          console.error('AI服务错误:', data);
+          throw new Error(data.reply || 'AI服务返回错误');
+        }
+        
+        if (data.reply) {
+          currentResponse = data.reply;
+          showAIResponse(data.reply, false);
+        } else {
+          throw new Error('No response from AI');
+        }
+        
+      } catch (error) {
+        console.error('AI请求失败:', error);
+        
+        let errorMessage;
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = currentLanguage === 'zh'
+            ? '网络连接失败。请检查网络连接。'
+            : 'Network connection failed. Please check your connection.';
+        } else if (error.message.includes('404')) {
+          errorMessage = currentLanguage === 'zh'
+            ? 'API端点不存在 (404)。请确保已正确部署Netlify Functions。'
+            : 'API endpoint not found (404). Please ensure Netlify Functions are properly deployed.';
+        } else {
+          errorMessage = currentLanguage === 'zh'
+            ? `请求失败：${error.message}`
+            : `Request failed: ${error.message}`;
+        }
+        
+        showAIResponse(errorMessage, true);
+      } finally {
+        isAILoading = false;
+        resetUIState();
+      }
+    }
+
+    function showAIResponse(response, isError) {
+      const responseDiv = document.getElementById('aiResponse');
+      responseDiv.innerHTML = response;
+      responseDiv.className = `ai-response ${isError ? 'error' : 'success'}`;
+      
+      // 更新当前响应文本（用于TTS）
+      currentResponse = response;
+      
+      // 显示TTS按钮
+      updateTTSButton();
+    }
+
+    function resetUIState() {
+      const input = document.getElementById('aiInput');
+      const sendBtn = document.getElementById('sendBtn');
+      
+      sendBtn.textContent = currentLanguage === 'zh' ? '发送' : 'Send';
+      sendBtn.classList.remove('loading');
+      input.disabled = false;
+      input.value = '';
+      input.focus();
+    }
+
+    // ================ 语音功能 ================
+    function initSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en-US';
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+        
+        speechRecognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          document.getElementById('aiInput').value = transcript;
+          sendToAI();
+        };
+        
+        speechRecognition.onerror = (event) => {
+          console.error('语音识别错误:', event.error);
+          stopRecording();
+        };
+        
+        speechRecognition.onend = stopRecording;
+      }
+    }
+
+    function toggleVoice() {
+      if (!speechRecognition) {
+        initSpeechRecognition();
+      }
+      
+      if (isRecording) {
+        speechRecognition.stop();
+      } else {
+        speechRecognition.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en-US';
+        speechRecognition.start();
+        isRecording = true;
+        document.getElementById('voiceBtn').classList.add('recording');
+        document.getElementById('voiceBtn').textContent = '⏹️';
+      }
+    }
+
+    function stopRecording() {
+      isRecording = false;
+      document.getElementById('voiceBtn').classList.remove('recording');
+      document.getElementById('voiceBtn').textContent = '🎤';
+    }
+
+    // ================ 改进的TTS功能 ================
+    function cleanTextForTTS(text) {
+      if (!text) return '';
+      
+      // 移除所有HTML标签
+      text = text.replace(/<[^>]*>/g, ' ');
+      
+      // 移除Markdown标记
+      text = text.replace(/[#*_`~\[\](){}|\\\-=+>]/g, ' ');
+      
+      // 移除特殊符号和表情符号
+      text = text.replace(/[\u2000-\u206F\u2E00-\u2E7F\u3000-\u303F\uFE00-\uFE0F\uFE20-\uFE2F\uE000-\uF8FF\u{1F000}-\u{1F9FF}]/gu, ' ');
+      
+      // 移除代码块标记
+      text = text.replace(/```[\s\S]*?```/g, ' ');
+      
+      // 移除URL
+      text = text.replace(/https?:\/\/[^\s]+/g, ' ');
+      
+      // 移除多余的空格和换行
+      text = text.replace(/\s+/g, ' ').trim();
+      
+      return text;
+    }
+
+    function speakResponse() {
+      // 如果正在朗读，点击停止
+      if (isSpeaking) {
+        stopSpeaking();
+        return;
+      }
+      
+      // 如果没有响应内容
+      if (!currentResponse || currentResponse.trim().length === 0) {
+        const errorMsg = currentLanguage === 'zh'
+          ? '没有可朗读的内容'
+          : 'No content to read';
+        updateTTSStatus(errorMsg, true);
+        return;
+      }
+      
+      // 清理文本
+      const cleanText = cleanTextForTTS(currentResponse);
+      
+      if (!cleanText || cleanText.trim().length === 0) {
+        const errorMsg = currentLanguage === 'zh'
+          ? '清理后没有可朗读的文本'
+          : 'No readable text after cleaning';
+        updateTTSStatus(errorMsg, true);
+        return;
+      }
+      
+      if (!('speechSynthesis' in window)) {
+        const errorMsg = currentLanguage === 'zh'
+          ? '您的浏览器不支持语音朗读功能'
+          : 'Your browser does not support text-to-speech';
+        updateTTSStatus(errorMsg, true);
+        return;
+      }
+      
+      // 创建语音实例
+      currentUtterance = new SpeechSynthesisUtterance(cleanText);
+      
+      // 设置语言和语音参数
+      currentUtterance.lang = currentLanguage === 'zh' ? 'zh-CN' : 'en-US';
+      currentUtterance.rate = 0.9;  // 语速
+      currentUtterance.pitch = 1.0; // 音调
+      currentUtterance.volume = 1.0; // 音量
+      
+      // 事件监听器
+      currentUtterance.onstart = () => {
+        isSpeaking = true;
+        updateTTSButton();
+        const statusMsg = currentLanguage === 'zh'
+          ? '正在朗读... 点击喇叭图标停止'
+          : 'Reading aloud... Click speaker to stop';
+        updateTTSStatus(statusMsg, false);
+      };
+      
+      currentUtterance.onend = () => {
+        isSpeaking = false;
+        currentUtterance = null;
+        updateTTSButton();
+        updateTTSStatus('', false);
+      };
+      
+      currentUtterance.onerror = (event) => {
+        console.error('TTS错误:', event);
+        isSpeaking = false;
+        currentUtterance = null;
+        updateTTSButton();
+        const errorMsg = currentLanguage === 'zh'
+          ? `朗读错误: ${event.error}`
+          : `Reading error: ${event.error}`;
+        updateTTSStatus(errorMsg, true);
+      };
+      
+      // 开始朗读
+      speechSynthesis.speak(currentUtterance);
+    }
+    
+    function stopSpeaking() {
+      if (speechSynthesis && isSpeaking) {
+        speechSynthesis.cancel();
+        isSpeaking = false;
+        currentUtterance = null;
+        updateTTSButton();
+        const statusMsg = currentLanguage === 'zh'
+          ? '朗读已停止'
+          : 'Reading stopped';
+        updateTTSStatus(statusMsg, false);
+        setTimeout(() => updateTTSStatus('', false), 2000);
+      }
+    }
+    
+    function updateTTSButton() {
+      const ttsBtn = document.getElementById('ttsBtn');
+      if (isSpeaking) {
+        ttsBtn.classList.add('speaking');
+        ttsBtn.classList.add('active');
+        ttsBtn.textContent = '⏹️';
+        ttsBtn.title = currentLanguage === 'zh' ? '停止朗读' : 'Stop reading';
+      } else {
+        ttsBtn.classList.remove('speaking');
+        ttsBtn.classList.remove('active');
+        ttsBtn.textContent = '🔊';
+        ttsBtn.title = currentLanguage === 'zh' ? '语音朗读' : 'Read aloud';
+      }
+    }
+    
+    function updateTTSStatus(message, isError) {
+      const statusDiv = document.getElementById('ttsStatus');
+      if (message) {
+        statusDiv.textContent = message;
+        statusDiv.className = isError ? 'tts-status error' : 'tts-status active';
+      } else {
+        statusDiv.textContent = '';
+        statusDiv.className = 'tts-status';
+      }
+    }
+
+    function clearChat() {
+      // 停止正在进行的朗读
+      stopSpeaking();
+      
+      document.getElementById('aiResponse').textContent = currentLanguage === 'zh'
+        ? '对话已清空。有什么可以帮助你的吗？'
+        : 'Conversation cleared. How can I help you?';
+      currentResponse = '';
+      updateTTSButton();
+      updateTTSStatus('', false);
+    }
+
+    // ================ 测试连接功能 ================
+    async function testFunctionConnection() {
+      const responseDiv = document.getElementById('aiResponse');
+      const originalContent = responseDiv.innerHTML;
+      const originalClass = responseDiv.className;
+      
+      responseDiv.innerHTML = currentLanguage === 'zh' 
+        ? '🔍 测试连接中...'
+        : '🔍 Testing connection...';
+      responseDiv.className = 'ai-response loading';
+      
+      try {
+        const response = await fetch('/.netlify/functions/deepseek-assistant', {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+        
+        const text = await response.text();
+        let resultText;
+        
+        try {
+          const data = JSON.parse(text);
+          resultText = currentLanguage === 'zh'
+            ? `<strong>✅ 连接测试成功！</strong><br>
+               状态码: ${response.status}<br>
+               状态: ${data.status || '正常'}<br>
+               时间: ${data.timestamp || '未知'}`
+            : `<strong>✅ Connection Test Successful!</strong><br>
+               Status: ${response.status}<br>
+               Status: ${data.status || 'OK'}<br>
+               Time: ${data.timestamp || 'Unknown'}`;
+        } catch {
+          resultText = currentLanguage === 'zh'
+            ? `<strong>⚠️ 连接测试结果：</strong><br>
+               状态码: ${response.status}<br>
+               响应: ${text.substring(0, 100)}...`
+            : `<strong>⚠️ Connection Test Result：</strong><br>
+               Status: ${response.status}<br>
+               Response: ${text.substring(0, 100)}...`;
+        }
+        
+        responseDiv.innerHTML = resultText;
+        responseDiv.className = 'ai-response';
+        
+        // 5秒后恢复原始内容
+        setTimeout(() => {
+          responseDiv.innerHTML = originalContent;
+          responseDiv.className = originalClass;
+        }, 5000);
+        
+      } catch (error) {
+        responseDiv.innerHTML = currentLanguage === 'zh'
+          ? `<strong>❌ 连接测试失败：</strong><br>${error.message}<br>
+             <small>请检查Netlify Functions部署状态</small>`
+          : `<strong>❌ Connection Test Failed：</strong><br>${error.message}<br>
+             <small>Check Netlify Functions deployment status</small>`;
+        responseDiv.className = 'ai-response error';
+        
+        // 5秒后恢复原始内容
+        setTimeout(() => {
+          responseDiv.innerHTML = originalContent;
+          responseDiv.className = originalClass;
+        }, 5000);
+      }
+    }
+
+    // ================ 初始化 ================
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DeepSeek学习学院加载完成');
+      
+      // 尝试从本地存储加载语言偏好
+      const savedLanguage = localStorage.getItem('preferredLanguage');
+      if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'en')) {
+        setLanguage(savedLanguage);
+      } else {
+        // 默认中文
+        setLanguage('zh');
+      }
+      
+      // 初始化语音
+      initSpeechRecognition();
+      
+      // 监听页面隐藏时停止语音
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isSpeaking) {
+          stopSpeaking();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

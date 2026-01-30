@@ -1,0 +1,14 @@
+{
+  "name": "deepseek-learning-academy",
+  "version": "1.0.0",
+  "description": "DeepSeek大语言模型学习学院",
+  "main": "index.html",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": ["deepseek", "llm", "ai", "education"],
+  "author": "Your Name",
+  "license": "MIT"
+}
